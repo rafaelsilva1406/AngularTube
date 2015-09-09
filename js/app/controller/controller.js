@@ -1,17 +1,25 @@
 ﻿window.angularTube.controller = (function () {
 
     function init(obj) {
-        obj.controller('VideosController', function ($scope, $http, $log, VideosService,promiseTracker) {
+        obj.controller('VideosController', ['$scope', '$http', '$log', 'HelloService', 'VideosService', 'YoutubeService', 'promiseTracker', 'cfpLoadingBar', 'localStorageService', function ($scope, $http, $log, HelloService, VideosService, YoutubeService, promiseTracker, cfpLoadingBar, localStorageService) {
             var $promise = {};
-            configService();
+            $scope.youtube = VideosService.getYoutube();
+            $scope.results = VideosService.getResults();
+            $scope.upcoming = VideosService.getUpcoming();
+            $scope.history = VideosService.getHistory();
+            $scope.playlist = true;
+            $scope.progress = promiseTracker();
+            HelloService.config();
+            
+            $scope.start = function () {
+                cfpLoadingBar.start();
+                cfpLoadingBar.inc();
+                cfpLoadingBar.set(0.3);
+                cfpLoadingBar.status();
+            };
 
-            function configService() {
-                $scope.youtube = VideosService.getYoutube();
-                $scope.results = VideosService.getResults();
-                $scope.upcoming = VideosService.getUpcoming();
-                $scope.history = VideosService.getHistory();
-                $scope.playlist = true;
-                $scope.progress = promiseTracker();
+            $scope.complete = function () {
+                cfpLoadingBar.complete();
             }
 
             $scope.launch = function (id, title) {
@@ -23,6 +31,7 @@
 
             $scope.queue = function (id, title) {
                 VideosService.queueVideo(id, title);
+                console.log($scope.history);
                 VideosService.deleteVideo($scope.history, id);
                 $log.info('Queued id:' + id + ' and title:' + title);
             };
@@ -31,25 +40,14 @@
                 VideosService.deleteVideo($scope.upcoming, id);
             };
 
-            $scope.submit = function () {
-                $promise = $http.get('https://www.googleapis.com/youtube/v3/search', {
-                    params: {
-                        key: 'AIzaSyB49USoWlwgKupg7BjR-6EPQGftTbk9xEo',
-                        type: 'video',
-                        maxResults: '10',
-                        part: 'id,snippet',
-                        fields: 'items/id,items/snippet/title,items/snippet/description,items/snippet/thumbnails/default,items/snippet/channelTitle',
-                        q: this.query
-                    }
-                })
-                .success(function (data) {
-                    VideosService.listResults(data);
-                    $log.info(data);
-                })
-                .error(function () {
-                    $log.info('Search error');
-                });
-
+            $scope.submit = function (search) {
+                $scope.start();
+                $promise = YoutubeService.getAPI(search)
+                    .then(function (data) {
+                        VideosService.listResults(data);
+                        $scope.complete();
+                    });
+                    
                 $scope.progress.addPromise($promise);
             }
 
@@ -57,7 +55,7 @@
                 $scope.playlist = state;
             }
 
-        });
+        }]);
     }
 
     return {

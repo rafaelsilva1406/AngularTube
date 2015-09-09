@@ -1,12 +1,12 @@
 ﻿window.angularTube.main = (function (service, controller) {
-	var app = angular.module('AngularTube', ["ui.router", "ajoslin.promise-tracker"]);
+	var app = angular.module('AngularTube', ["ui.router", "ngMessages", "LocalStorageModule", "ui.bootstrap", "ajoslin.promise-tracker", "chieffancypants.loadingBar", "ngAnimate"]);
 
 	function run()
 	{
 		app.run(function () {
-			var tag = document.createElement('script');
+			var tag = document.createElement('script'),
+				firstScriptTag = document.getElementsByTagName('script')[0];
 			tag.src = "http://www.youtube.com/iframe_api";
-			var firstScriptTag = document.getElementsByTagName('script')[0];
 			firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 		});
 	}
@@ -16,15 +16,24 @@
 		app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
 			$urlRouterProvider.otherwise('/home');
 			$stateProvider
-			  .state('home', {
+				.state('home', {
 				  url: '/home',
 				  templateUrl: 'view/page/home.html',
 				  controller: 'VideosController'
 			  });
 		}])
-		app.config(function ($httpProvider) {
+		.config(function ($httpProvider) {
 			$httpProvider.defaults.useXDomain = true;
 			delete $httpProvider.defaults.headers.common['X-Requested-With'];
+		})
+		.config(['localStorageServiceProvider', function (localStorageServiceProvider) {
+			localStorageServiceProvider
+				.setStorageType('sessionStorage');
+		}])
+		.config(function (cfpLoadingBarProvider) {
+			cfpLoadingBarProvider.includeSpinner = true;
+			cfpLoadingBarProvider.latencyThreshold = 5000;
+			cfpLoadingBarProvider.spinnerTemplate = '<div><span class="fa fa-spinner">Loading...</span></div>';
 		});
 	}
 
