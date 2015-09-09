@@ -1,0 +1,30 @@
+﻿<!doctype html>
+<html data-ng-app="AngularTube">
+  <head>
+    <meta charset="utf-8"> 
+    <title>AngularTube</title>
+    <meta name="author" content="Rafael Silva">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="/css/libs/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/libs/bootstrap-theme.min.css">
+  </head>
+  <body data-ng-controller="VideosController">
+    <div class="container-fluid"><div data-ui-view></div></div>
+    <footer>
+      Built with <a href="http://angularjs.org/">AngularJS</a>. Source code available on <a href="https://github.com/rafaelsilva1406/AngularTube">GitHub</a>.
+    </footer>
+    <script src="js/libs/jquery.min.js"></script> 
+    <script src="/js/libs/angular.min.js"></script>
+    <script src="/js/libs/angular-ui-router.min.js"></script>
+    <script src="/js/libs/angular-local-storage.min.js"></script>
+    <script src="/js/libs/angular-animate.min.js"></script>
+    <script src="js/libs/promise-tracker.js"></script>
+    <!--[if IE]><script type="text/javascript" src="/js/libs/excanvas.js"></script><![endif] -->
+    <script>
+        window.angularTube = window.angularTube || {};
+    </script>
+    <script src="/js/app/service/service.js"></script>
+    <script src="/js/app/controller/controller.js"></script>
+    <script src="/js/app/main.js"></script>
+  </body>
+</html>

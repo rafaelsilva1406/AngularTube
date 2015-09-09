@@ -1,0 +1,81 @@
+﻿<div data-ng-show="progress.active()"></div>
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+        <nav class="navbar navbar-default">
+            <div class="row">
+                <div class="col-sm-6 col-md-6 col-lg-6">
+                    <a class="navbar-brand" href="#">Angular<strong>Tube</strong></a>
+                </div>
+                <div class="col-sm-6 col-md-6 col-lg-6">
+                    <form class="form-inline" id="search">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <input id="query" name="q" type="text" placeholder="Search for a YouTube video" data-ng-model="query">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <button type="submit" title="Search" class="btn btn-danger btn-block" data-ng-click="submit()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+        <div class="row">
+            <div class="col-sm-3 col-md-3 col-lg-3">
+                <div id="results" class="well well-lg">
+                    <div class="video" data-ng-repeat="video in results" data-ng-click="queue(video.id, video.title)">
+                        <img class="video-image" data-ng-src="{{ video.thumbnail }}">
+                        <p class="video-title">{{ video.title }}</p>
+                        <p class="video-author">{{ video.author }}</p>
+                        <p class="video-description">{{ video.description }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-9 col-md-9 col-lg-9">
+                <div id="player" class="embed-responsive embed-responsive-4by3">
+                    <div id="placeholder" class="embed-responsive-item"></div>
+                </div>
+                <p class="text-muted"><span id="play">{{ youtube.state }}</span></p>
+                <div id="playlist">
+                    <p id="current" class="bg-warning">{{ youtube.videoTitle }}</p>
+                    <ol id="upcoming" data-ng-show="playlist" class="list-group">
+                        <li data-ng-repeat="video in upcoming" class="list-group-item">
+                            <p>{{video.title}}</p>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <button class="item-title btn btn-primary btn-block" data-ng-click="launch(video.id, video.title)"><span class="glyphicon glyphicon-music" aria-hidden="true"></span></button>
+                                </div>
+                                <div class="col-md-6">
+                                    <button class="item-delete btn btn-danger btn-block" data-ng-click="delete(video.id)"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+                                </div>
+                            </div>
+                        </li>
+                    </ol>
+                    <ol id="history" data-ng-hide="playlist" class="list-group">
+                        <li data-ng-repeat="video in history" class="list-group-item">
+                            <p>{{video.title}}</p>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <button class="item-title btn btn-primary btn-block" data-ng-click="queue(video.id, video.title)"><span class="glyphicon glyphicon-music" aria-hidden="true"></span></button>
+                                </div>
+                                <div class="col-md-6">
+                                    <button class="item-delete btn btn-danger btn-block" data-ng-click="delete(video.id)"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+                                </div>
+                            </div>
+                        </li>
+                    </ol>
+                    <div class="btn-toolbar" role="toolbar" aria-label="menubar">
+                        <div class="btn-group" role="group" aria-label="manuitem"><button class="btn btn-default btn-block" data-ng-class="{on:playlist}" data-ng-click="tabulate(true)">Upcoming</button></div>
+                        <div class="btn-group" role="group" aria-label="manuitem"><button class="btn btn-default btn-block" data-ng-class="{on:!playlist}" data-ng-click="tabulate(false)">History</button></div>
+                    </div>
+               </div>
+            </div>
+        </div>
+    </div>
+</div>
